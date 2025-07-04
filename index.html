@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarCards Menu</title>
+    <!-- Подключаем файл со стилями. Убедитесь, что он называется style.css -->
+    <link rel="stylesheet" href="style.css?v=1.4"> 
+</head>
+<body>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ (теперь он не дублируется) -->
+    <div class="min-h-screen relative overflow-hidden">
+        <!-- Баланс -->
+        <div class="absolute top-8 right-6 z-20">
+            <div class="flex items-center space-x-2 px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="text-yellow-400 drop-shadow-lg"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <span class="font-semibold text-lg tracking-wide text-white">1,250</span>
+            </div>
+        </div>
+
+        <!-- Главная панель -->
+        <div class="flex items-center justify-center min-h-screen px-6">
+            <div class="w-full max-w-sm">
+                <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-2xl">
+                    <!-- Логотип -->
+                    <div class="text-center mb-12">
+                        <h1 class="text-4xl font-bold tracking-wider drop-shadow-lg text-white">StarCards</h1>
+                        <div class="w-16 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mt-4"></div>
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="space-y-4">
+                        <button id="play-btn" class="w-full h-14 text-lg font-medium backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg group flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 group-hover:scale-110"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            <span>Играть</span>
+                        </button>
+                        <button id="lobby-btn" class="w-full h-14 text-lg font-medium backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg group flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 group-hover:scale-110"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Создать лобби</span>
+                        </button>
+                        <button id="friends-btn" class="w-full h-14 text-lg font-medium backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg group flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 group-hover:scale-110"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+                            <span>Друзья</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
