@@ -1,42 +1,34 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // --- Экраны и панели ---
+    // --- Экраны и элементы ---
     const mainMenuPanel = document.getElementById("main-menu-panel");
     const lobbyCreationPanel = document.getElementById("lobby-creation-panel");
     const paymentPanel = document.getElementById("payment-panel");
+    const stakeInput = document.getElementById('stake-input');
+    const stakeError = document.getElementById('stake-error'); // Находим элемент для ошибки
+    const createLobbyButton = document.getElementById("create-lobby-btn");
 
-    // --- Все кнопки ---
+    // --- Кнопки ---
     const balanceButton = document.getElementById("balance-btn");
     const lobbyButton = document.getElementById("lobby-btn");
     const backToMenuFromLobbyBtn = document.getElementById("back-to-menu-from-lobby-btn");
     const backToMenuFromPaymentBtn = document.getElementById("back-to-menu-from-payment-btn");
-    const createLobbyButton = document.getElementById("create-lobby-btn");
+    
+    // --- НАША НОВАЯ ЛОГИКА ПРОВЕРКИ СТАВКИ ---
+    function validateStake() {
+        const value = parseInt(stakeInput.value);
+        if (isNaN(value) || value < 20) {
+            stakeError.textContent = "Минимальная ставка: 20 звёзд"; // Показываем ошибку
+            return false; // Ставка неверная
+        } else {
+            stakeError.textContent = ""; // Прячем ошибку
+            return true; // Ставка верная
+        }
+    }
 
-    // --- Поле для ввода ставки ---
-    const stakeInput = document.getElementById('stake-input');
-
-    // --- НАША НОВАЯ ЛОГИКА ДЛЯ МИНИМАЛЬНОЙ СТАВКИ ---
     if (stakeInput) {
-        stakeInput.addEventListener('change', function() {
-            // Проверяем, если введенное значение меньше 20
-            if (parseInt(stakeInput.value) < 20) {
-                stakeInput.value = '20'; // Автоматически исправляем на 20
-            }
-        });
+        stakeInput.addEventListener('input', validateStake); // Проверяем при каждом вводе
     }
-    // ----------------------------------------------------
-
-    // --- Логика переключения кнопок кол-ва игроков ---
-    const playerCountSelector = document.querySelector(".player-count-selector");
-    if (playerCountSelector) {
-        playerCountSelector.addEventListener("click", function(event) {
-            if (event.target.classList.contains('player-option')) {
-                playerCountSelector.querySelectorAll('.player-option').forEach(button => {
-                    button.classList.remove('active');
-                });
-                event.target.classList.add('active');
-            }
-        });
-    }
+    // ------------------------------------------
 
     // --- Функции для переключения экранов ---
     function showScreen(panelToShow) {
@@ -55,6 +47,21 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- Логика для остальных кнопок ---
     const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
     if (tg) {
+        if (createLobbyButton) {
+            createLobbyButton.addEventListener("click", function() {
+                // Перед отправкой еще раз проверяем ставку
+                if (validateStake()) {
+                    const stakeAmount = stakeInput.value;
+                    const activePlayerOption = document.querySelector(".player-option.active");
+                    const playerCount = activePlayerOption ? activePlayerOption.textContent : '2';
+                    const lobbyData = { stake: stakeAmount, players: playerCount };
+
+                    tg.sendData(JSON.stringify(lobbyData));
+                    tg.close();
+                }
+            });
+        }
+        // ... (остальные обработчики без изменений)
         const playButton = document.getElementById("play-btn");
         const friendsButton = document.getElementById("friends-btn");
         const buyStarsButton = document.getElementById("buy-stars-btn");
@@ -66,23 +73,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 const amountInput = document.getElementById('amount-input');
                 const amount = amountInput ? amountInput.value : '0';
                 tg.showAlert(`Покупка ${amount} Stars! (Интеграция с Telegram Payments в разработке)`);
-            });
-        }
-        
-        if (createLobbyButton) {
-            createLobbyButton.addEventListener("click", function() {
-                let stakeAmount = stakeInput ? parseInt(stakeInput.value) : 20;
-                // Дополнительная проверка на случай, если пользователь ввел некорректное значение
-                if (stakeAmount < 20) {
-                    stakeAmount = 20;
-                }
-                
-                const activePlayerOption = document.querySelector(".player-option.active");
-                const playerCount = activePlayerOption ? activePlayerOption.textContent : '2';
-                const lobbyData = { stake: stakeAmount.toString(), players: playerCount };
-
-                tg.sendData(JSON.stringify(lobbyData));
-                tg.close();
             });
         }
     }

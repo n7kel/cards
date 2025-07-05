@@ -76,3 +76,12 @@ input { font-family: inherit; font-size: 100%; }
 .player-option.active { background-color: #8b5cf6; color: white; border-color: #a78bfa; }
 .create-button { background: linear-gradient(to bottom, #10b981, #059669); border-color: #047857; }
 .back-button { margin-top: 0.5rem; color: rgba(255, 255, 255, 0.6); text-decoration: underline; background: none; border: none; cursor: pointer; }
+
+/* --- Стили для сообщения об ошибке --- */
+.error-message {
+    color: #ef4444; /* Красный цвет */
+    font-size: 0.8rem;
+    font-weight: 500;
+    min-height: 1rem; /* Резервируем место, чтобы интерфейс не "прыгал" */
+    display: block; /* Делаем его блочным элементом */
+}
