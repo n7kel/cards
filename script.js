@@ -1,41 +1,38 @@
 // Ждем, когда вся страница полностью загрузится
 document.addEventListener("DOMContentLoaded", function() {
 
-    // --- Экраны и панели ---
+    // --- ЭКРАНЫ И ПАНЕЛИ ---
     const mainMenuPanel = document.getElementById("main-menu-panel");
     const lobbyCreationPanel = document.getElementById("lobby-creation-panel");
     const paymentPanel = document.getElementById("payment-panel");
+    const waitingPanel = document.getElementById("waiting-panel"); // Наш новый экран
 
-    // --- Все кнопки ---
+    // --- ОСНОВНЫЕ КНОПКИ ---
     const balanceButton = document.getElementById("balance-btn");
     const lobbyButton = document.getElementById("lobby-btn");
+    const createLobbyButton = document.getElementById("create-lobby-btn");
+    const cancelLobbyButton = document.getElementById("cancel-lobby-btn"); // Новая кнопка отмены
     const backToMenuFromLobbyBtn = document.getElementById("back-to-menu-from-lobby-btn");
     const backToMenuFromPaymentBtn = document.getElementById("back-to-menu-from-payment-btn");
-    const createLobbyButton = document.getElementById("create-lobby-btn");
-
-    // --- Поле для ввода ставки и сообщение об ошибке ---
+    
+    // --- ЭЛЕМЕНТЫ ФОРМ ---
     const stakeInput = document.getElementById('stake-input');
     const stakeError = document.getElementById('stake-error');
-
-    // --- ЛОГИКА ДЛЯ ВЫБОРА КОЛИЧЕСТВА ИГРОКОВ ---
     const playerCountSelector = document.querySelector(".player-count-selector");
-    if (playerCountSelector) {
-        playerCountSelector.addEventListener("click", function(event) {
-            // Проверяем, что кликнули именно по кнопке с классом 'player-option'
-            if (event.target.classList.contains('player-option')) {
-                // Сначала убираем класс 'active' у всех кнопок в этой группе
-                playerCountSelector.querySelectorAll('.player-option').forEach(button => {
-                    button.classList.remove('active');
-                });
-                // Затем добавляем класс 'active' только той, по которой кликнули
-                event.target.classList.add('active');
-            }
+
+    // --- ФУНКЦИЯ ДЛЯ ПЕРЕКЛЮЧЕНИЯ ЭКРАНОВ ---
+    function showScreen(panelToShow) {
+        // Сначала скроем все четыре панели
+        [mainMenuPanel, lobbyCreationPanel, paymentPanel, waitingPanel].forEach(panel => {
+            if (panel) panel.style.display = "none";
         });
+        // Потом покажем нужную
+        if (panelToShow) panelToShow.style.display = "block";
     }
 
-    // --- Логика для проверки минимальной ставки ---
+    // --- ЛОГИКА ПРОВЕРКИ СТАВКИ ---
     function validateStake() {
-        if (!stakeInput) return true; // Если поля нет, то и ошибки нет
+        if (!stakeInput) return true;
         const value = parseInt(stakeInput.value);
         if (isNaN(value) || value < 20) {
             if(stakeError) stakeError.textContent = "Минимальная ставка: 20 звёзд";
@@ -49,21 +46,26 @@ document.addEventListener("DOMContentLoaded", function() {
         stakeInput.addEventListener('input', validateStake);
     }
 
-    // --- Функции для переключения экранов ---
-    function showScreen(panelToShow) {
-        [mainMenuPanel, lobbyCreationPanel, paymentPanel].forEach(panel => {
-            if (panel) panel.style.display = "none";
+    // --- ЛОГИКА ВЫБОРА КОЛИЧЕСТВА ИГРОКОВ ---
+    if (playerCountSelector) {
+        playerCountSelector.addEventListener("click", function(event) {
+            if (event.target.classList.contains('player-option')) {
+                playerCountSelector.querySelectorAll('.player-option').forEach(button => {
+                    button.classList.remove('active');
+                });
+                event.target.classList.add('active');
+            }
         });
-        if (panelToShow) panelToShow.style.display = "block";
     }
 
-    // --- Обработчики для переключения экранов ---
+    // --- ОБРАБОТЧИКИ КЛИКОВ ДЛЯ ПЕРЕКЛЮЧЕНИЯ ЭКРАНОВ ---
     if (lobbyButton) lobbyButton.addEventListener("click", () => showScreen(lobbyCreationPanel));
     if (balanceButton) balanceButton.addEventListener("click", () => showScreen(paymentPanel));
     if (backToMenuFromLobbyBtn) backToMenuFromLobbyBtn.addEventListener("click", () => showScreen(mainMenuPanel));
     if (backToMenuFromPaymentBtn) backToMenuFromPaymentBtn.addEventListener("click", () => showScreen(mainMenuPanel));
+    if (cancelLobbyButton) cancelLobbyButton.addEventListener("click", () => showScreen(mainMenuPanel));
 
-    // --- Логика для остальных кнопок ---
+    // --- ЛОГИКА ДЛЯ ОСТАЛЬНЫХ КНОПОК ---
     const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
     if (tg) {
         const playButton = document.getElementById("play-btn");
@@ -80,6 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }
         
+        // ГЛАВНАЯ ЛОГИКА: СОЗДАНИЕ ЛОББИ
         if (createLobbyButton) {
             createLobbyButton.addEventListener("click", function() {
                 if (validateStake()) {
@@ -87,8 +90,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     const playerCount = activePlayerOption ? activePlayerOption.textContent : '2';
                     const lobbyData = { stake: stakeInput.value, players: playerCount };
 
+                    // Отправляем данные боту
                     tg.sendData(JSON.stringify(lobbyData));
-                    tg.close();
+                    
+                    // Вместо закрытия показываем экран ожидания
+                    showScreen(waitingPanel);
                 }
             });
         }
