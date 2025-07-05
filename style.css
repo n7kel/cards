@@ -28,9 +28,9 @@ button { font-family: inherit; font-size: 100%; color: inherit; background: none
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border-radius: 1.5rem;
-    padding: 2rem;
+    padding: 1.5rem;
     width: 100%;
-    max-width: 24rem;
+    max-width: 15rem;
     text-align: center;
 }
 .logo { color: rgb(214, 202, 202); font-size: 2.25rem; font-weight: 700; margin-bottom: 2rem; text-shadow: 1px 3px 3px rgba(0,0,0,0.4); }
