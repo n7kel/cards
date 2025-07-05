@@ -1,16 +1,17 @@
+// Ждем, когда вся страница полностью загрузится
 document.addEventListener("DOMContentLoaded", function() {
 
     // --- ЭКРАНЫ И ПАНЕЛИ ---
     const mainMenuPanel = document.getElementById("main-menu-panel");
     const lobbyCreationPanel = document.getElementById("lobby-creation-panel");
     const paymentPanel = document.getElementById("payment-panel");
-    const waitingPanel = document.getElementById("waiting-panel"); // Наш новый экран
+    const waitingPanel = document.getElementById("waiting-panel");
 
     // --- ВСЕ КНОПКИ ---
     const balanceButton = document.getElementById("balance-btn");
     const lobbyButton = document.getElementById("lobby-btn");
     const createLobbyButton = document.getElementById("create-lobby-btn");
-    const cancelLobbyButton = document.getElementById("cancel-lobby-btn"); // Новая кнопка отмены
+    const cancelLobbyButton = document.getElementById("cancel-lobby-btn");
     const backToMenuFromLobbyBtn = document.getElementById("back-to-menu-from-lobby-btn");
     const backToMenuFromPaymentBtn = document.getElementById("back-to-menu-from-payment-btn");
     
