@@ -4,30 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StarCards Menu</title>
-    <link rel="stylesheet" href="style.css?v=3.0">
+    <link rel="stylesheet" href="style.css?v=3.2"> 
 </head>
 <body>
     <div class="main-container">
-        <div class="balance-indicator">
+        <div id="balance-btn" class="balance-indicator">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
             <span>1,250</span>
         </div>
 
-        <div class="menu-panel">
+        <div id="main-menu-panel" class="menu-panel">
             <h1 class="logo">StarCards</h1>
             <div class="buttons-container">
-                <button id="play-btn" class="wood-button">
-                    <div class="wood-grain"></div>
-                    <div class="button-content">Играть</div>
-                </button>
-                <button id="lobby-btn" class="wood-button">
-                    <div class="wood-grain"></div>
-                    <div class="button-content">Создать лобби</div>
-                </button>
-                <button id="friends-btn" class="wood-button">
-                    <div class="wood-grain"></div>
-                    <div class="button-content">Друзья</div>
-                </button>
+                <button id="play-btn" class="wood-button"><div class="wood-grain"></div><div class="button-content">Играть</div></button>
+                <button id="lobby-btn" class="wood-button"><div class="wood-grain"></div><div class="button-content">Создать лобби</div></button>
+                <button id="friends-btn" class="wood-button"><div class="wood-grain"></div><div class="button-content">Друзья</div></button>
+            </div>
+        </div>
+
+        <div id="lobby-creation-panel" class="menu-panel" style="display: none;">
+            <h1 class="logo">Настройки лобби</h1>
+            <div class="options-container">
+                <div class="option-item">
+                    <label for="stake-input">Размер ставки (звёзд):</label>
+                    <input type="number" id="stake-input" class="custom-input" placeholder="20">
+                </div>
+                <div class="option-item">
+                    <label>Количество игроков:</label>
+                    <div class="player-count-selector">
+                        <button class="player-option active">2</button>
+                        <button class="player-option">3</button>
+                        <button class="player-option">4</button>
+                    </div>
+                </div>
+                <button id="create-lobby-btn" class="wood-button create-button"><div class="wood-grain"></div><div class="button-content">Создать</div></button>
+                <button id="back-to-menu-from-lobby-btn" class="back-button">Назад в меню</button>
+            </div>
+        </div>
+
+        <div id="payment-panel" class="menu-panel" style="display: none;">
+            <h1 class="logo">Пополнение</h1>
+            <div class="options-container">
+                <div class="option-item">
+                    <label for="amount-input">Сумма пополнения (в Stars):</label>
+                    <input type="number" id="amount-input" class="custom-input" placeholder="100">
+                </div>
+                <button id="buy-stars-btn" class="wood-button create-button"><div class="wood-grain"></div><div class="button-content">Купить Stars</div></button>
+                <button id="back-to-menu-from-payment-btn" class="back-button">Назад в меню</button>
             </div>
         </div>
     </div>
