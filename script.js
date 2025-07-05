@@ -6,17 +6,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function connect() {
     // ВАЖНО: Этот адрес нужно будет заменить на публичный адрес от Cloudflare
-    const websocketUrl = "wss://6bb5-83-172-150-93.ngrok-free.app";
+    const websocketUrl = "wss://6bb5-83-172-150-93.ngrok-free.app"; // Убедитесь, что это ваш АКТУАЛЬНЫЙ адрес ngrok!
     
     ws = new WebSocket(websocketUrl);
 
         ws.onopen = function() {
-            console.log("WebSocket connection established");
+            console.log("WebSocket connection established. ReadyState:", ws.readyState); // ДОБАВЛЕНО
             // Отправляем ID пользователя для инициализации, если мы в Telegram
             if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                const userId = tg.initDataUnsafe.user.id; // ДОБАВЛЕНО для удобства
+                console.log("Sending init with user_id:", userId); // ДОБАВЛЕНО
                 ws.send(JSON.stringify({
                     action: 'init',
-                    user_id: tg.initDataUnsafe.user.id
+                    user_id: userId
                 }));
             }
         };
@@ -26,10 +28,10 @@ document.addEventListener("DOMContentLoaded", function() {
             // Здесь будем обрабатывать ответы от сервера
         };
 
-      ws.onclose = function(event) {
-    console.log("WebSocket connection closed. Code: " + event.code + ", Reason: " + event.reason + ". Reconnecting...");
-    setTimeout(connect, 3000);
-};
+        ws.onclose = function(event) {
+            console.log("WebSocket connection closed. Code: " + event.code + ", Reason: " + event.reason + ". Reconnecting...");
+            setTimeout(connect, 3000);
+        };
 
         ws.onerror = function(error) {
             console.error("WebSocket error: ", error);
@@ -73,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- ГЛАВНАЯ ЛОГИКА: СОЗДАНИЕ ЛОББИ ЧЕРЕЗ WEBSOCKET ---
     if (createLobbyButton) {
         createLobbyButton.addEventListener("click", function() {
+            console.log("Attempting to create lobby. WebSocket readyState:", ws ? ws.readyState : "not defined"); // ДОБАВЛЕНО
             const stakeInput = document.getElementById('stake-input');
             const activePlayerOption = document.querySelector(".player-option.active");
             
@@ -88,6 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 showScreen(waitingPanel); // Переключаемся на экран ожидания
             } else {
                 if (tg) tg.showAlert("Не удалось отправить данные. Проверьте соединение.");
+                console.error("WebSocket not open for sending. Current state:", ws ? ws.readyState : "not defined"); // ДОБАВЛЕНО
             }
         });
     }
