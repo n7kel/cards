@@ -24,7 +24,7 @@ button { font-family: inherit; font-size: 100%; color: inherit; background: none
 
 /* Центральная панель */
 .menu-panel {
-    background-color: rgba(44, 42, 74, 0.8);
+    background-color: rgba(0, 0, 0, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -34,7 +34,7 @@ button { font-family: inherit; font-size: 100%; color: inherit; background: none
     max-width: 24rem;
     text-align: center;
 }
-.logo { color: white; font-size: 2.25rem; font-weight: 700; margin-bottom: 2rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
+.logo { color: rgb(214, 202, 202); font-size: 2.25rem; font-weight: 700; margin-bottom: 2rem; text-shadow: 1px 3px 3px rgba(0,0,0,0.4); }
 
 /* Контейнер для кнопок */
 .buttons-container { display: flex; flex-direction: column; gap: 1.25rem; }
@@ -46,14 +46,14 @@ button { font-family: inherit; font-size: 100%; color: inherit; background: none
     height: 4rem;
     border-radius: 0.75rem;
     background: linear-gradient(to bottom, #8A5A44, #6B4226);
-    color: white;
+    color: rgb(214, 202, 202);
     font-weight: 600;
-    font-size: 1.125rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     transition: all 0.2s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 -3px 5px rgba(0, 0, 0, 0.2), inset 0 3px 5px rgba(255, 255, 255, 0.2);
-    border: 1px solid #4A2E19;
+    border: 1px solid #503928;
 }
 .wood-button:hover {
     transform: translateY(-2px);
@@ -96,7 +96,7 @@ button { font-family: inherit; font-size: 100%; color: inherit; background: none
 /* Стили для баланса */
 .balance-indicator {
     position: absolute; top: 2rem; right: 1.5rem; display: flex; align-items: center; gap: 0.5rem;
-    background-color: rgba(0, 0, 0, 0.3); padding: 0.5rem 1rem; border-radius: 9999px;
+    background-color: rgba(0, 0, 0, 0.8); padding: 0.5rem 1rem; border-radius: 9999px;
     color: white; font-weight: 600;
 }
 .balance-indicator svg { color: #facc15; }
