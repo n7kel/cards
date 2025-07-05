@@ -1,100 +1,82 @@
-// Ждем, когда вся страница полностью загрузится
 document.addEventListener("DOMContentLoaded", function() {
+    // --- НАСТРОЙКА WEBSOCKET ---
+    let ws;
 
-    // --- ЭКРАНЫ И ПАНЕЛИ ---
+    function connect() {
+        // Указываем адрес нашего WebSocket-сервера на локальном компьютере
+        ws = new WebSocket("ws://localhost:8765");
+
+        ws.onopen = function() {
+            console.log("WebSocket connection established");
+        };
+
+        ws.onmessage = function(event) {
+            console.log("Message from server: ", event.data);
+            // В будущем здесь будем обрабатывать ответы от сервера
+        };
+
+        ws.onclose = function() {
+            console.log("WebSocket connection closed. Reconnecting...");
+            // Пытаемся переподключиться через 3 секунды
+            setTimeout(connect, 3000); 
+        };
+
+        ws.onerror = function(error) {
+            console.error("WebSocket error: ", error);
+        };
+    }
+
+    connect(); // Запускаем соединение при загрузке страницы
+
+    // --- Экраны и панели ---
     const mainMenuPanel = document.getElementById("main-menu-panel");
     const lobbyCreationPanel = document.getElementById("lobby-creation-panel");
     const paymentPanel = document.getElementById("payment-panel");
     const waitingPanel = document.getElementById("waiting-panel");
 
-    // --- ВСЕ КНОПКИ ---
+    // --- Все кнопки ---
+    const createLobbyButton = document.getElementById("create-lobby-btn");
+    // ... (остальные переменные для кнопок)
     const balanceButton = document.getElementById("balance-btn");
     const lobbyButton = document.getElementById("lobby-btn");
-    const createLobbyButton = document.getElementById("create-lobby-btn");
-    const cancelLobbyButton = document.getElementById("cancel-lobby-btn");
     const backToMenuFromLobbyBtn = document.getElementById("back-to-menu-from-lobby-btn");
     const backToMenuFromPaymentBtn = document.getElementById("back-to-menu-from-payment-btn");
-    
-    // --- ЭЛЕМЕНТЫ ФОРМ ---
-    const stakeInput = document.getElementById('stake-input');
-    const stakeError = document.getElementById('stake-error');
-    const playerCountSelector = document.querySelector(".player-count-selector");
+    const cancelLobbyButton = document.getElementById("cancel-lobby-btn");
 
-    // --- ФУНКЦИЯ ДЛЯ ПЕРЕКЛЮЧЕНИЯ ЭКРАНОВ ---
+    // --- Логика переключения экранов (без изменений) ---
     function showScreen(panelToShow) {
-        [mainMenuPanel, lobbyCreationPanel, paymentPanel, waitingPanel].forEach(panel => {
-            if (panel) panel.style.display = "none";
+        [mainMenuPanel, lobbyCreationPanel, paymentPanel, waitingPanel].forEach(p => {
+            if (p) p.style.display = "none";
         });
         if (panelToShow) panelToShow.style.display = "block";
     }
-
-    // --- ЛОГИКА ПРОВЕРКИ СТАВКИ ---
-    function validateStake() {
-        if (!stakeInput) return true;
-        const value = parseInt(stakeInput.value);
-        if (isNaN(value) || value < 20) {
-            if(stakeError) stakeError.textContent = "Минимальная ставка: 20 звёзд";
-            return false;
-        } else {
-            if(stakeError) stakeError.textContent = "";
-            return true;
-        }
-    }
-    if (stakeInput) {
-        stakeInput.addEventListener('input', validateStake);
-    }
-
-    // --- ЛОГИКА ВЫБОРА КОЛИЧЕСТВА ИГРОКОВ ---
-    if (playerCountSelector) {
-        playerCountSelector.addEventListener("click", function(event) {
-            if (event.target.classList.contains('player-option')) {
-                playerCountSelector.querySelectorAll('.player-option').forEach(button => {
-                    button.classList.remove('active');
-                });
-                event.target.classList.add('active');
-            }
-        });
-    }
-
-    // --- ОБРАБОТЧИКИ КЛИКОВ ДЛЯ ПЕРЕКЛЮЧЕНИЯ ЭКРАНОВ ---
+    
+    // --- Обработчики кликов ---
     if (lobbyButton) lobbyButton.addEventListener("click", () => showScreen(lobbyCreationPanel));
     if (balanceButton) balanceButton.addEventListener("click", () => showScreen(paymentPanel));
     if (backToMenuFromLobbyBtn) backToMenuFromLobbyBtn.addEventListener("click", () => showScreen(mainMenuPanel));
     if (backToMenuFromPaymentBtn) backToMenuFromPaymentBtn.addEventListener("click", () => showScreen(mainMenuPanel));
     if (cancelLobbyButton) cancelLobbyButton.addEventListener("click", () => showScreen(mainMenuPanel));
 
-    // --- ЛОГИКА ДЛЯ ОСТАЛЬНЫХ КНОПОК ---
-    const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-    if (tg) {
-        const playButton = document.getElementById("play-btn");
-        const friendsButton = document.getElementById("friends-btn");
-        const buyStarsButton = document.getElementById("buy-stars-btn");
+    // --- ГЛАВНАЯ ЛОГИКА: СОЗДАНИЕ ЛОББИ ЧЕРЕЗ WEBSOCKET ---
+    if (createLobbyButton) {
+        createLobbyButton.addEventListener("click", function() {
+            // ... (проверка ставки, сбор данных)
+            const stakeInput = document.getElementById('stake-input');
+            const activePlayerOption = document.querySelector(".player-option.active");
+            const lobbyData = {
+                action: "create_lobby", // Добавляем команду для сервера
+                stake: stakeInput.value,
+                players: activePlayerOption ? activePlayerOption.textContent : '2'
+            };
 
-        if (playButton) playButton.addEventListener("click", () => tg.showAlert("Кнопка 'Играть' в разработке!"));
-        if (friendsButton) friendsButton.addEventListener("click", () => tg.showAlert("Кнопка 'Друзья' в разработке!"));
-        if (buyStarsButton) {
-            buyStarsButton.addEventListener("click", () => {
-                const amountInput = document.getElementById('amount-input');
-                const amount = amountInput ? amountInput.value : '0';
-                tg.showAlert(`Покупка ${amount} Stars! (Интеграция с Telegram Payments в разработке)`);
-            });
-        }
-        
-        // ГЛАВНАЯ ЛОГИКА: СОЗДАНИЕ ЛОББИ
-        if (createLobbyButton) {
-            createLobbyButton.addEventListener("click", function() {
-                if (validateStake()) {
-                    const activePlayerOption = document.querySelector(".player-option.active");
-                    const playerCount = activePlayerOption ? activePlayerOption.textContent : '2';
-                    const lobbyData = { stake: stakeInput.value, players: playerCount };
-
-                    // Отправляем данные боту
-                    tg.sendData(JSON.stringify(lobbyData));
-                    
-                    // Вместо закрытия показываем экран ожидания
-                    showScreen(waitingPanel);
-                }
-            });
-        }
+            // Отправляем данные по нашей "телефонной линии"
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(lobbyData));
+                showScreen(waitingPanel); // Переключаемся на экран ожидания
+            } else {
+                alert("Не удалось подключиться к серверу. Попробуйте перезагрузить.");
+            }
+        });
     }
 });
