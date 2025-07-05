@@ -2,13 +2,12 @@
 html { line-height: 1.5; font-family: sans-serif; }
 body {
     margin: 0;
-    /* --- ВАШ ФОН --- */
-    background-image: url('background-picture.png'); /* Убедитесь, что файл с фоном называется background-picture.png */
+    background-image: url('background-picture.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
 }
-h1, button, div, span { margin: 0; padding: 0; }
+h1, button, div, span, svg { margin: 0; padding: 0; }
 button { font-family: inherit; font-size: 100%; color: inherit; background: none; border: none; cursor: pointer; }
 
 /* Основной контейнер */
