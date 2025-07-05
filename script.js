@@ -5,10 +5,10 @@ document.addEventListener("DOMContentLoaded", function() {
     let ws;
 
     function connect() {
-        // ВАЖНО: Этот адрес нужно будет заменить на публичный адрес от Cloudflare
-        const websocketUrl = "ws://localhost:8765"; 
-        
-        ws = new WebSocket(websocketUrl);
+    // ВАЖНО: Этот адрес нужно будет заменить на публичный адрес от Cloudflare
+    const websocketUrl = "wss://concepts-chips-portfolio-urban.trycloudflare.com"; 
+    
+    ws = new WebSocket(websocketUrl);
 
         ws.onopen = function() {
             console.log("WebSocket connection established");
