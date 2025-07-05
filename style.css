@@ -71,8 +71,8 @@ input { font-family: inherit; font-size: 100%; }
 .option-item { display: flex; flex-direction: column; gap: 0.5rem; }
 .option-item label { font-weight: 500; font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
 .custom-input { width: 100%; background-color: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.5rem; padding: 0.75rem; color: white; font-size: 1rem; }
-.player-count-selector { display: flex; gap: 0.5rem; }
-.player-option { flex-grow: 1; padding: 0.75rem; border-radius: 0.5rem; background-color: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7); transition: all 0.2s; }
+.player-count-selector {display: flex; gap: 0.5rem; flex-wrap: wrap; /* <-- НАША НОВАЯ СТРОКА */}
+.player-option { flex-grow: 1; padding: 0.5rem; /* Уменьшили отступы */ font-size: 0.9rem; /* Уменьшили шрифт */ border-radius: 0.5rem; background-color: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7); transition: all 0.2s; }
 .player-option.active { background-color: #8b5cf6; color: white; border-color: #a78bfa; }
 .create-button { background: linear-gradient(to bottom, #10b981, #059669); border-color: #047857; }
 .back-button { margin-top: 0.5rem; color: rgba(255, 255, 255, 0.6); text-decoration: underline; background: none; border: none; cursor: pointer; }
