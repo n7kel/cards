@@ -1,4 +1,3 @@
-// Ждем, когда вся страница полностью загрузится
 document.addEventListener("DOMContentLoaded", function() {
 
     // --- ЭКРАНЫ И ПАНЕЛИ ---
@@ -7,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const paymentPanel = document.getElementById("payment-panel");
     const waitingPanel = document.getElementById("waiting-panel"); // Наш новый экран
 
-    // --- ОСНОВНЫЕ КНОПКИ ---
+    // --- ВСЕ КНОПКИ ---
     const balanceButton = document.getElementById("balance-btn");
     const lobbyButton = document.getElementById("lobby-btn");
     const createLobbyButton = document.getElementById("create-lobby-btn");
@@ -22,11 +21,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // --- ФУНКЦИЯ ДЛЯ ПЕРЕКЛЮЧЕНИЯ ЭКРАНОВ ---
     function showScreen(panelToShow) {
-        // Сначала скроем все четыре панели
         [mainMenuPanel, lobbyCreationPanel, paymentPanel, waitingPanel].forEach(panel => {
             if (panel) panel.style.display = "none";
         });
-        // Потом покажем нужную
         if (panelToShow) panelToShow.style.display = "block";
     }
 
