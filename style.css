@@ -1,20 +1,25 @@
-/* --- ФИНАЛЬНЫЙ СТИЛЬ С ДЕРЕВЯННЫМИ КНОПКАМИ --- */
+/* --- ФИНАЛЬНАЯ ВЕРСИЯ С ФОНОМ И ДЕРЕВЯННЫМИ КНОПКАМИ --- */
 html { line-height: 1.5; font-family: sans-serif; }
-body { margin: 0; }
-h1, button, div { margin: 0; padding: 0; }
-button { font-family: inherit; font-size: 100%; color: inherit; background: none; border: none; cursor: pointer; }
-
-/* Фон */
-.main-container {
-    background-image: url('background.jpg');
+body {
+    margin: 0;
+    /* --- ВАШ ФОН --- */
+    background-image: url('background-picture.png'); /* Убедитесь, что файл с фоном называется background-picture.png */
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
+}
+h1, button, div, span { margin: 0; padding: 0; }
+button { font-family: inherit; font-size: 100%; color: inherit; background: none; border: none; cursor: pointer; }
+
+/* Основной контейнер */
+.main-container {
     width: 100%;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
+    box-sizing: border-box;
 }
 
 /* Центральная панель */
@@ -22,41 +27,42 @@ button { font-family: inherit; font-size: 100%; color: inherit; background: none
     background-color: rgba(44, 42, 74, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     border-radius: 1.5rem;
     padding: 2rem;
     width: 100%;
     max-width: 24rem;
     text-align: center;
 }
-.logo { color: white; font-size: 2.25rem; font-weight: 700; margin-bottom: 2rem; }
+.logo { color: white; font-size: 2.25rem; font-weight: 700; margin-bottom: 2rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
 
 /* Контейнер для кнопок */
 .buttons-container { display: flex; flex-direction: column; gap: 1.25rem; }
 
-/* --- СТИЛИ ДЛЯ ДЕРЕВЯННОЙ КНОПКИ --- */
+/* Стили для деревянной кнопки */
 .wood-button {
     position: relative;
     width: 100%;
-    height: 4rem; /* 64px */
-    border-radius: 0.75rem; /* 12px */
-    background: linear-gradient(to bottom, #8A5A44, #6B4226); /* Основной деревянный цвет */
+    height: 4rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(to bottom, #8A5A44, #6B4226);
     color: white;
     font-weight: 600;
-    font-size: 1.125rem; /* 18px */
+    font-size: 1.125rem;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    border-bottom: 3px solid #4A2E19;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 -3px 5px rgba(0, 0, 0, 0.2), inset 0 3px 5px rgba(255, 255, 255, 0.2);
+    border: 1px solid #4A2E19;
 }
 .wood-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25), inset 0 -3px 5px rgba(0, 0, 0, 0.2), inset 0 3px 5px rgba(255, 255, 255, 0.2);
     filter: brightness(1.05);
 }
 .wood-button:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -3px 5px rgba(0, 0, 0, 0.3), inset 0 3px 5px rgba(255, 255, 255, 0.1);
     filter: brightness(0.95);
 }
 .wood-grain {
@@ -86,9 +92,8 @@ button { font-family: inherit; font-size: 100%; color: inherit; background: none
     justify-content: center;
     height: 100%;
 }
-/* -------------------------------- */
 
-/* Стили для баланса (без изменений) */
+/* Стили для баланса */
 .balance-indicator {
     position: absolute; top: 2rem; right: 1.5rem; display: flex; align-items: center; gap: 0.5rem;
     background-color: rgba(0, 0, 0, 0.3); padding: 0.5rem 1rem; border-radius: 9999px;
