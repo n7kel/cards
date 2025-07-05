@@ -2,8 +2,10 @@
 html { line-height: 1.5; font-family: sans-serif; }
 body {
     margin: 0;
-    /* ВРЕМЕННО СТАВИМ ЯРКИЙ ЦВЕТ ДЛЯ ПРОВЕРКИ */
-    background-color: #22c55e; /* Ярко-зеленый */
+    background-image: url('background-picture.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 h1, button, div, span, svg, label, input { margin: 0; padding: 0; box-sizing: border-box; }
 button { font-family: inherit; font-size: 100%; color: inherit; background: none; border: none; cursor: pointer; }
