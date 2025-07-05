@@ -26,10 +26,10 @@ document.addEventListener("DOMContentLoaded", function() {
             // Здесь будем обрабатывать ответы от сервера
         };
 
-        ws.onclose = function() {
-            console.log("WebSocket connection closed. Reconnecting...");
-            setTimeout(connect, 3000); 
-        };
+      ws.onclose = function(event) {
+    console.log("WebSocket connection closed. Code: " + event.code + ", Reason: " + event.reason + ". Reconnecting...");
+    setTimeout(connect, 3000);
+};
 
         ws.onerror = function(error) {
             console.error("WebSocket error: ", error);
