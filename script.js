@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function connect() {
     // ВАЖНО: Этот адрес нужно будет заменить на публичный адрес от Cloudflare
-    const websocketUrl = "wss://6a5d-83-172-150-93.ngrok-free.app"; // Убедитесь, что это ваш АКТУАЛЬНЫЙ адрес ngrok!
+    const websocketUrl = "wss://10ee-83-172-150-93.ngrok-free.app";  // Убедитесь, что это ваш АКТУАЛЬНЫЙ адрес ngrok!
     
     ws = new WebSocket(websocketUrl);
 
