@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
     let userTelegramId = null; 
 
-    // --- Экраны и элементы ---
+    // --- Элементы ---
     const allPanels = {
         main: document.getElementById("main-menu-panel"),
         list: document.getElementById("lobby-list-panel"),
@@ -15,24 +15,17 @@ document.addEventListener("DOMContentLoaded", function() {
     const stakeInput = document.getElementById('stake-input');
     const stakeError = document.getElementById('stake-error');
     const playerCountSelector = document.querySelector(".player-count-selector");
-    const waitingInfo = document.getElementById('waiting-info');
+    const waitingInfoElement = document.getElementById('waiting-info');
+    const findLobbyButton = document.getElementById("find-lobby-btn");
+    const createLobbyButton = document.getElementById("create-lobby-btn");
+    const lobbyButton = document.getElementById("lobby-btn");
+    const balanceButton = document.getElementById("balance-btn");
+    const backToMenuFromLobbyBtn = document.getElementById("back-to-menu-from-lobby-btn");
+    const backToMenuFromListBtn = document.getElementById("back-to-menu-from-list-btn");
+    const backToMenuFromPaymentBtn = document.getElementById("back-to-menu-from-payment-btn");
+    const cancelLobbyButton = document.getElementById("cancel-lobby-btn");
 
-    // --- Кнопки ---
-    const buttons = {
-        play: document.getElementById("play-btn"),
-        lobby: document.getElementById("lobby-btn"),
-        findLobby: document.getElementById("find-lobby-btn"), // Находим кнопку "Найти лобби"
-        createLobby: document.getElementById("create-lobby-btn"),
-        balance: document.getElementById("balance-btn"),
-        backFromLobby: document.getElementById("back-to-menu-from-lobby-btn"),
-        backFromPayment: document.getElementById("back-to-menu-from-payment-btn"),
-        backFromList: document.getElementById("back-to-menu-from-lobby-list-btn"),
-        cancelLobby: document.getElementById("cancel-lobby-btn"),
-        friends: document.getElementById("friends-btn"),
-        buyStars: document.getElementById("buy-stars-btn")
-    };
-    
-    // --- НАСТРОЙКА WEBSOCKET ---
+    // --- WebSocket ---
     let ws;
     function connect() {
         // ВАЖНО: Убедитесь, что здесь ваш АКТУАЛЬНЫЙ адрес ngrok!
@@ -48,97 +41,125 @@ document.addEventListener("DOMContentLoaded", function() {
         };
 
         ws.onmessage = function(event) {
-            console.log("Message from server: ", event.data);
-            const data = JSON.parse(event.data);
-            
-            if (data.action === 'update_lobbies') {
-                updateLobbyList(data.lobbies);
-            } else if (data.action === 'lobby_update' && waitingInfo) {
-                waitingInfo.innerHTML = `Ожидание игроков...<br>${data.current_players}/${data.total_players}`;
-            } else if (data.action === 'game_start') {
-                if(tg) tg.showAlert("Игра начинается!");
+            const message = JSON.parse(event.data);
+            if (message.action === 'update_lobbies') {
+                updateLobbiesList(message.lobbies);
+            } else if (message.action === 'lobby_update') {
+                if (waitingInfoElement) {
+                    waitingInfoElement.innerHTML = `Ожидание игроков...<br>Игроков: ${message.current_players}/${message.total_players}`;
+                }
+            } else if (message.action === 'game_start') {
                 showScreen(allPanels.game);
-                document.getElementById('game-info').textContent = `Игра в лобби ${data.lobby_owner_id} началась!`;
+                const gameInfoElement = document.getElementById('game-info');
+                if (gameInfoElement) {
+                    gameInfoElement.textContent = `Игра началась в лобби ${message.lobby_owner_id} с игроками: ${message.players.join(', ')}`;
+                }
+                if (tg) tg.showAlert("Игра началась!");
             }
         };
-        ws.onclose = () => {
-            console.log("WebSocket connection closed. Reconnecting...");
-            setTimeout(connect, 3000);
-        };
-        ws.onerror = (error) => console.error("WebSocket error: ", error);
+        ws.onclose = () => setTimeout(connect, 3000);
+        ws.onerror = (error) => console.error("WebSocket error:", error);
     }
     if (tg) { connect(); }
 
-    // --- ФУНКЦИЯ: ОБНОВЛЕНИЕ СПИСКА ЛОББИ ---
-    function updateLobbyList(lobbies) {
-        if (!lobbiesContainer) return;
-        lobbiesContainer.innerHTML = ''; 
-
-        if (!lobbies || lobbies.length === 0) {
-            lobbiesContainer.innerHTML = '<p class="no-lobbies-message">Активных лобби нет. Создайте своё!</p>';
-            return;
-        }
-
-        lobbies.forEach(lobby => {
-            if (lobby.owner_id === userTelegramId) return; // Не показываем свои же лобби
-
-            const lobbyElement = document.createElement('div');
-            lobbyElement.className = 'lobby-card wood-button';
-            const isFull = lobby.players_joined >= lobby.players_needed;
-            
-            lobbyElement.innerHTML = `
-                <div class="wood-grain"></div>
-                <div class="button-content" style="width: 100%; justify-content: space-between;">
-                    <div style="text-align: left;">
-                        <p>Ставка: ${lobby.stake} ★</p>
-                        <p>Игроков: ${lobby.players_joined}/${lobby.players_needed}</p>
-                    </div>
-                    <button class="join-lobby-btn" data-owner-id="${lobby.owner_id}" ${isFull ? 'disabled' : ''}>${isFull ? 'Полное' : 'Войти'}</button>
-                </div>
-            `;
-            lobbiesContainer.appendChild(lobbyElement);
-        });
-    }
-    
-    // --- Обработчик для кнопок "Войти" ---
-    if(lobbiesContainer){
-        lobbiesContainer.addEventListener('click', function(event) {
-            if (event.target.classList.contains('join-lobby-btn') && !event.target.disabled) {
-                const ownerId = event.target.dataset.ownerId;
-                if (ws && ws.readyState === WebSocket.OPEN) {
-                    ws.send(JSON.stringify({
-                        action: 'join_lobby',
-                        lobby_owner_id: ownerId,
-                        user_id: userTelegramId
-                    }));
-                    showScreen(allPanels.waiting);
-                }
-            }
-        });
-    }
-    
-    // --- Логика переключения экранов ---
+    // --- UI Logic ---
     function showScreen(panelToShow) {
         Object.values(allPanels).forEach(p => { if (p) p.style.display = "none"; });
         if (panelToShow) panelToShow.style.display = "block";
     }
-    
-    buttons.lobby?.addEventListener("click", () => showScreen(allPanels.create));
-    buttons.balance?.addEventListener("click", () => showScreen(allPanels.payment));
-    buttons.findLobby?.addEventListener("click", () => {
+
+    function updateLobbiesList(lobbies) {
+        if (!lobbiesContainer) return;
+        lobbiesContainer.innerHTML = '';
+        if (!lobbies || lobbies.length === 0) {
+            lobbiesContainer.innerHTML = '<p class="no-lobbies-message">Активных лобби нет. Создайте своё!</p>';
+            return;
+        }
+        lobbies.forEach(lobby => {
+            if (lobby.owner_id === userTelegramId) return;
+            const lobbyCard = document.createElement('div');
+            lobbyCard.className = 'lobby-card wood-button';
+            const isFull = lobby.players_joined >= lobby.players_needed;
+            lobbyCard.innerHTML = `
+                <div class="wood-grain"></div>
+                <div class="button-content" style="flex-direction: column; align-items: flex-start; padding: 10px; width: 100%;">
+                    <p>Владелец: ${lobby.owner_id}</p>
+                    <p>Ставка: ${lobby.stake} звёзд</p>
+                    <p>Игроков: ${lobby.players_joined}/${lobby.players_needed}</p>
+                    <button class="join-lobby-btn" data-owner-id="${lobby.owner_id}" ${isFull ? 'disabled' : ''} style="width: auto; padding: 5px 15px; margin-top: 10px; background: #10b981; border-radius: 5px;">Присоединиться</button>
+                </div>
+            `;
+            lobbiesContainer.appendChild(lobbyCard);
+        });
+    }
+
+    function validateStake() {
+        if (!stakeInput) return true;
+        const value = parseInt(stakeInput.value);
+        if (isNaN(value) || value < 20) {
+            if(stakeError) stakeError.textContent = "Минимальная ставка: 20 звёзд";
+            return false;
+        } else {
+            if(stakeError) stakeError.textContent = "";
+            return true;
+        }
+    }
+
+    // --- Event Listeners ---
+    lobbyButton?.addEventListener("click", () => showScreen(allPanels.create));
+    balanceButton?.addEventListener("click", () => showScreen(allPanels.payment));
+    findLobbyButton?.addEventListener("click", () => {
         showScreen(allPanels.list);
         if (ws && ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({ action: 'request_lobbies' }));
+             ws.send(JSON.stringify({ action: 'request_lobbies' }));
         }
     });
-    buttons.backFromLobby?.addEventListener("click", () => showScreen(allPanels.main));
-    buttons.backFromList?.addEventListener("click", () => showScreen(allPanels.main));
-    buttons.backFromPayment?.addEventListener("click", () => showScreen(allPanels.main));
-    buttons.cancelLobby?.addEventListener("click", () => {
+    backToMenuFromLobbyBtn?.addEventListener("click", () => showScreen(allPanels.main));
+    backToMenuFromPaymentBtn?.addEventListener("click", () => showScreen(allPanels.main));
+    backToMenuFromListBtn?.addEventListener("click", () => showScreen(allPanels.main));
+    cancelLobbyButton?.addEventListener("click", () => {
         // TODO: Отправить на сервер сообщение об отмене лобби
         showScreen(allPanels.main);
     });
+
+    createLobbyButton?.addEventListener("click", () => {
+        if (validateStake()) {
+            const activePlayerOption = playerCountSelector.querySelector(".player-option.active");
+            const lobbyData = {
+                action: "create_lobby",
+                stake: stakeInput.value,
+                players: activePlayerOption ? activePlayerOption.textContent.trim() : '2'
+            };
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(lobbyData));
+                showScreen(allPanels.waiting);
+                if (waitingInfoElement) {
+                    waitingInfoElement.innerHTML = `Ожидание игроков...<br>Игроков: 1/${lobbyData.players}`;
+                }
+            }
+        }
+    });
+
+    lobbiesContainer?.addEventListener('click', (event) => {
+        if (event.target.classList.contains('join-lobby-btn')) {
+            const ownerId = event.target.dataset.ownerId;
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    action: 'join_lobby',
+                    lobby_owner_id: ownerId,
+                    user_id: userTelegramId
+                }));
+                showScreen(allPanels.waiting);
+            }
+        }
+    });
     
-    // --- Остальная логика ---
-    // ... (весь остальной код из вашего предыдущего script.js остается здесь)
+    playerCountSelector?.addEventListener("click", (event) => {
+        if (event.target.classList.contains('player-option')) {
+            playerCountSelector.querySelectorAll('.player-option').forEach(button => button.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    });
+
+    stakeInput?.addEventListener('input', validateStake);
 });
