@@ -3,87 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarCards Menu</title>
-    <link rel="stylesheet" href="style.css?v=5.0"> <!-- Новая версия для сброса кэша -->
+    <title>StarCards Game</title>
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-    <div class="main-container">
-        <!-- Баланс -->
-        <div id="balance-btn" class="balance-indicator">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-            <span id="balance-text">1,250</span>
-        </div>
-
-        <!-- ГЛАВНОЕ МЕНЮ -->
+    <div class="game-container">
         <div id="main-menu-panel" class="menu-panel">
             <h1 class="logo">StarCards</h1>
             <div class="buttons-container">
                 <button id="play-btn" class="wood-button"><div class="wood-grain"></div><div class="button-content">Играть</div></button>
                 <button id="lobby-btn" class="wood-button"><div class="wood-grain"></div><div class="button-content">Создать лобби</div></button>
+                <button id="find-lobby-btn" class="wood-button"><div class="wood-grain"></div><div class="button-content">Найти лобби</div></button>
                 <button id="friends-btn" class="wood-button"><div class="wood-grain"></div><div class="button-content">Друзья</div></button>
             </div>
         </div>
 
-        <!-- ЭКРАН СПИСКА ЛОББИ (НОВЫЙ) -->
-        <div id="lobby-list-panel" class="menu-panel" style="display: none;">
-            <h1 class="logo">Доступные игры</h1>
-            <div id="lobbies-container" class="lobbies-container">
-                <!-- Сюда JavaScript будет добавлять лобби -->
-                <p class="no-lobbies-message">Активных лобби нет. Создайте своё!</p>
-            </div>
-            <button id="back-to-menu-from-list-btn" class="back-button">Назад в меню</button>
-        </div>
-
-        <!-- ЭКРАН СОЗДАНИЯ ЛОББИ -->
         <div id="lobby-creation-panel" class="menu-panel" style="display: none;">
-            <h1 class="logo">Настройки лобби</h1>
+            <h1 class="logo">Создать лобби</h1>
             <div class="options-container">
-                <div class="option-item">
-                    <label for="stake-input">Размер ставки (звёзд):</label>
-                    <input type="number" id="stake-input" class="custom-input" placeholder="20" min="20">
-                    <span id="stake-error" class="error-message"></span> 
+                <label for="stake-input">Ставка (звёзд):</label>
+                <input type="number" id="stake-input" value="20" min="20">
+                <span id="stake-error" class="error-message"></span>
+                
+                <p>Количество игроков:</p>
+                <div class="player-count-selector">
+                    <button class="player-option active">2</button>
+                    <button class="player-option">3</button>
+                    <button class="player-option">4</button>
                 </div>
-                <div class="option-item">
-                    <label>Количество игроков:</label>
-                    <div class="player-count-selector">
-                        <button class="player-option active">2</button>
-                        <button class="player-option">3</button>
-                        <button class="player-option">4</button>
-                        <button class="player-option">5</button>
-                        <button class="player-option">6</button>
-                        <button class="player-option">7</button>
-                        <button class="player-option">8</button>
-                    </div>
-                </div>
-                <button id="create-lobby-btn" class="wood-button create-button"><div class="wood-grain"></div><div class="button-content">Создать</div></button>
-                <button id="back-to-menu-from-lobby-btn" class="back-button">Назад в меню</button>
             </div>
+            <button id="create-lobby-btn" class="wood-button"><div class="wood-grain"></div><div class="button-content">Создать</div></button>
+            <button id="back-to-menu-from-lobby-btn" class="back-button">Назад в меню</button>
         </div>
 
-        <!-- ЭКРАН ПОПОЛНЕНИЯ БАЛАНСА -->
-        <div id="payment-panel" class="menu-panel" style="display: none;">
-            <h1 class="logo">Пополнение</h1>
-            <div class="options-container">
-                <div class="option-item">
-                    <label for="amount-input">Сумма пополнения (в Stars):</label>
-                    <input type="number" id="amount-input" class="custom-input" placeholder="100">
-                </div>
-                <button id="buy-stars-btn" class="wood-button create-button"><div class="wood-grain"></div><div class="button-content">Купить Stars</div></button>
-                <button id="back-to-menu-from-payment-btn" class="back-button">Назад в меню</button>
+        <div id="lobby-list-panel" class="menu-panel" style="display: none;">
+            <h1 class="logo">Доступные лобби</h1>
+            <div id="lobbies-container" class="options-container">
+                <p>Загрузка лобби...</p>
             </div>
+            <button id="back-to-menu-from-lobby-list-btn" class="back-button">Назад в меню</button>
         </div>
-        
-        <!-- ЭКРАН ОЖИДАНИЯ В ЛОББИ -->
+
+        <div id="payment-panel" class="menu-panel" style="display: none;">
+            <h1 class="logo">Баланс</h1>
+            <p>Здесь будет логика пополнения баланса.</p>
+            <button id="back-to-menu-from-payment-btn" class="back-button">Назад в меню</button>
+        </div>
+
         <div id="waiting-panel" class="menu-panel" style="display: none;">
             <h1 class="logo">Ожидание игроков...</h1>
-            <div class="spinner"></div>
-            <p class="waiting-text">Лобби создано. Ожидаем подключения других игроков.</p>
-            <p class="invite-link-placeholder">Ваша ссылка для приглашения скоро появится здесь.</p>
+            <p id="waiting-info">Пожалуйста, подождите, пока присоединятся другие игроки.</p>
             <button id="cancel-lobby-btn" class="back-button">Отменить лобби</button>
         </div>
+
+        <div id="game-panel" class="menu-panel" style="display: none;">
+            <h1 class="logo">Игра началась!</h1>
+            <p id="game-info">Логика игры будет здесь.</p>
+        </div>
     </div>
-    
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <script src="script.js"></script>
 </body>
 </html>
