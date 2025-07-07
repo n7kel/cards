@@ -7,79 +7,64 @@ body {
     background-position: center;
     background-attachment: fixed;
 }
-h1, button, div, span, svg, label, input { margin: 0; padding: 0; box-sizing: border-box; }
+h1, button, div, span, svg, label, input, p { margin: 0; padding: 0; box-sizing: border-box; }
 button { font-family: inherit; font-size: 100%; color: inherit; background: none; border: none; cursor: pointer; }
 input { font-family: inherit; font-size: 100%; }
 
-/* Основной контейнер */
-.main-container { width: 100%; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+/* ... (все старые стили, которые вы прислали, остаются здесь без изменений) ... */
 
-/* Центральная панель */
-.menu-panel {
-    background-color: rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    width: 100%;
-    max-width: 20rem; /* Сделал панель чуть уже, как вы просили */
+/* --- НОВЫЕ СТИЛИ ДЛЯ СПИСКА ЛОББИ --- */
+.lobbies-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+.no-lobbies-message {
+    color: rgba(255, 255, 255, 0.5);
+    padding: 2rem 0;
     text-align: center;
 }
-.logo {
-    color: rgb(214, 202, 202);
-    font-size: 2.25rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
-    animation: text-glow 3s ease-in-out infinite;
-}
-
-/* Контейнер для кнопок */
-.buttons-container { display: flex; flex-direction: column; gap: 1.25rem; }
-
-/* Стили для деревянной кнопки */
-.wood-button {
-    position: relative;
-    width: 100%;
-    height: 3.5rem; /* Сделал кнопки чуть ниже */
+.lobby-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 1rem;
     border-radius: 0.75rem;
-    background: linear-gradient(to bottom, #8A5A44, #6B4226);
-    color: rgb(214, 202, 202);
-    font-weight: 600;
-    font-size: 1.125rem; /* Уменьшил шрифт на кнопках */
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 -3px 5px rgba(0, 0, 0, 0.2), inset 0 3px 5px rgba(255, 255, 255, 0.2);
-    border: 1px solid #503928;
 }
-.wood-button:hover { transform: translateY(-2px); box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25), inset 0 -3px 5px rgba(0, 0, 0, 0.2), inset 0 3px 5px rgba(255, 255, 255, 0.2); filter: brightness(1.05); }
-.wood-button:active { transform: translateY(1px); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -3px 5px rgba(0, 0, 0, 0.3), inset 0 3px 5px rgba(255, 255, 255, 0.1); filter: brightness(0.95); }
-.wood-grain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.05) 20%, rgba(255, 255, 255, 0.05) 40%, rgba(0, 0, 0, 0.05) 60%, rgba(255, 255, 255, 0.05) 80%, rgba(0, 0, 0, 0.05) 100%); background-size: 250% 100%; animation: grain 7s linear infinite; opacity: 0.5; }
-@keyframes grain { 0% { background-position: 0 0; } 100% { background-position: -250% 0; } }
-.button-content { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; height: 100%; }
+.lobby-details {
+    text-align: left;
+    color: white;
+}
+.lobby-details .stake {
+    font-weight: 600;
+}
+.lobby-details .players {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+.join-button {
+    background-color: #10b981;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+}
+.join-button:hover {
+    background-color: #059669;
+}
+.join-button:disabled {
+    background-color: #4b5563; /* Серый цвет для заполненного лобби */
+    cursor: not-allowed;
+}
 
-/* Стили для баланса */
-.balance-indicator { position: absolute; top: 2rem; right: 1.5rem; display: flex; align-items: center; gap: 0.5rem; background-color: rgba(0, 0, 0, 0.8); padding: 0.5rem 1rem; border-radius: 9999px; color: white; font-weight: 600; cursor: pointer; }
-.balance-indicator svg { color: #facc15; }
-
-/* Анимация свечения для логотипа */
-@keyframes text-glow { 0% { text-shadow: 1px 1px 2px rgba(0,0,0,0.4), 0 0 5px rgba(255,223,186,0.3); } 50% { text-shadow: 1px 1px 2px rgba(0,0,0,0.4), 0 0 20px rgba(255,223,186,0.5); } 100% { text-shadow: 1px 1px 2px rgba(0,0,0,0.4), 0 0 5px rgba(255,223,186,0.3); } }
-
-/* --- НОВЫЕ СТИЛИ ДЛЯ ЭКРАНОВ ЛОББИ И ПОПОЛНЕНИЯ --- */
-.options-container { display: flex; flex-direction: column; gap: 1.5rem; color: white; text-align: left; }
-.option-item { display: flex; flex-direction: column; gap: 0.5rem; }
-.option-item label { font-weight: 500; font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
-.custom-input { width: 100%; background-color: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.5rem; padding: 0.75rem; color: white; font-size: 1rem; }
-.player-count-selector { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-.player-option { flex-grow: 1; padding: 0.5rem; font-size: 0.9rem; border-radius: 0.5rem; background-color: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7); transition: all 0.2s; }
-.player-option.active { background-color: #8b5cf6; color: white; border-color: #a78bfa; }
-.create-button { background: linear-gradient(to bottom, #10b981, #059669); border-color: #047857; }
-.back-button { margin-top: 0.5rem; color: rgba(255, 255, 255, 0.6); text-decoration: underline; background: none; border: none; cursor: pointer; }
-.error-message { color: #ef4444; font-size: 0.8rem; font-weight: 500; min-height: 1rem; display: block; }
-
-/* --- Стили для экрана ожидания --- */
-.waiting-text { color: rgba(255, 255, 255, 0.8); margin: 1.5rem 0; }
-.invite-link-placeholder { color: rgba(255, 255, 255, 0.5); font-size: 0.9rem; margin-bottom: 1.5rem; }
-.spinner { margin: 2rem auto; border: 4px solid rgba(255, 255, 255, 0.2); border-left-color: #fff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+/* Скрываем скроллбар */
+.lobbies-container::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}

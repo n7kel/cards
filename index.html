@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StarCards Menu</title>
-    <link rel="stylesheet" href="style.css?v=4.0"> 
+    <link rel="stylesheet" href="style.css?v=5.0"> 
 </head>
 <body>
     <div class="main-container">
         <div id="balance-btn" class="balance-indicator">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-            <span>1,250</span>
+            <span id="balance-text">1,250</span>
         </div>
 
         <div id="main-menu-panel" class="menu-panel">
@@ -20,6 +20,14 @@
                 <button id="lobby-btn" class="wood-button"><div class="wood-grain"></div><div class="button-content">Создать лобби</div></button>
                 <button id="friends-btn" class="wood-button"><div class="wood-grain"></div><div class="button-content">Друзья</div></button>
             </div>
+        </div>
+
+        <div id="lobby-list-panel" class="menu-panel" style="display: none;">
+            <h1 class="logo">Доступные игры</h1>
+            <div id="lobbies-container" class="lobbies-container">
+                <p class="no-lobbies-message">Активных лобби нет. Создайте своё!</p>
+            </div>
+            <button id="back-to-menu-from-list-btn" class="back-button">Назад в меню</button>
         </div>
 
         <div id="lobby-creation-panel" class="menu-panel" style="display: none;">
