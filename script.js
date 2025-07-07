@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- НАСТРОЙКА WEBSOCKET ---
     let ws;
     function connect() {
-        const websocketUrl = "wss://10ee-83-172-150-93.ngrok-free.app"; // ВАШ АКТУАЛЬНЫЙ АДРЕС NGROK
+        const websocketUrl = "wss://f842e332b342.ngrok-free.app"; // ВАШ АКТУАЛЬНЫЙ АДРЕС NGROK
         ws = new WebSocket(websocketUrl);
 
         ws.onopen = function() {
