@@ -11,16 +11,16 @@ h1, button, div, span, svg, label, input, p { margin: 0; padding: 0; box-sizing:
 button { font-family: inherit; font-size: 100%; color: inherit; background: none; border: none; cursor: pointer; }
 input { font-family: inherit; font-size: 100%; }
 
-/* ... (все старые стили, которые вы прислали, остаются здесь без изменений) ... */
+/* ... (все старые стили остаются без изменений) ... */
 
 /* --- НОВЫЕ СТИЛИ ДЛЯ СПИСКА ЛОББИ --- */
 .lobbies-container {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    max-height: 60vh;
+    gap: 0.75rem; /* 12px */
+    max-height: 60vh; /* Ограничиваем высоту, чтобы список был прокручиваемым */
     overflow-y: auto;
-    padding-right: 5px;
+    padding-right: 5px; /* Небольшой отступ для скроллбара */
 }
 .no-lobbies-message {
     color: rgba(255, 255, 255, 0.5);
