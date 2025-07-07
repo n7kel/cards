@@ -3,11 +3,14 @@ document.addEventListener("DOMContentLoaded", function() {
     let userTelegramId = null; 
 
     // --- Экраны и элементы ---
-    const mainMenuPanel = document.getElementById("main-menu-panel");
-    const lobbyListPanel = document.getElementById("lobby-list-panel");
-    const lobbyCreationPanel = document.getElementById("lobby-creation-panel");
-    const paymentPanel = document.getElementById("payment-panel");
-    const waitingPanel = document.getElementById("waiting-panel");
+    const allPanels = {
+        main: document.getElementById("main-menu-panel"),
+        list: document.getElementById("lobby-list-panel"),
+        create: document.getElementById("lobby-creation-panel"),
+        payment: document.getElementById("payment-panel"),
+        waiting: document.getElementById("waiting-panel"),
+        game: document.getElementById("game-panel")
+    };
     const lobbiesContainer = document.getElementById("lobbies-container");
     const stakeInput = document.getElementById('stake-input');
     const stakeError = document.getElementById('stake-error');
@@ -15,14 +18,18 @@ document.addEventListener("DOMContentLoaded", function() {
     const waitingInfo = document.getElementById('waiting-info');
 
     // --- Кнопки ---
-    const playButton = document.getElementById("play-btn");
-    const lobbyButton = document.getElementById("lobby-btn");
-    const createLobbyButton = document.getElementById("create-lobby-btn");
-    const balanceButton = document.getElementById("balance-btn");
-    const backToMenuFromLobbyBtn = document.getElementById("back-to-menu-from-lobby-btn");
-    const backToMenuFromPaymentBtn = document.getElementById("back-to-menu-from-payment-btn");
-    const backToMenuFromListBtn = document.getElementById("back-to-menu-from-list-btn");
-    const cancelLobbyButton = document.getElementById("cancel-lobby-btn");
+    const buttons = {
+        play: document.getElementById("play-btn"),
+        lobby: document.getElementById("lobby-btn"),
+        createLobby: document.getElementById("create-lobby-btn"),
+        balance: document.getElementById("balance-btn"),
+        backFromLobby: document.getElementById("back-to-menu-from-lobby-btn"),
+        backFromPayment: document.getElementById("back-to-menu-from-payment-btn"),
+        backFromList: document.getElementById("back-to-menu-from-list-btn"),
+        cancelLobby: document.getElementById("cancel-lobby-btn"),
+        friends: document.getElementById("friends-btn"),
+        buyStars: document.getElementById("buy-stars-btn")
+    };
     
     // --- НАСТРОЙКА WEBSOCKET ---
     let ws;
@@ -49,7 +56,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 waitingInfo.textContent = `Ожидание игроков... ${data.current_players}/${data.total_players}`;
             } else if (data.action === 'game_start') {
                 if(tg) tg.showAlert("Игра начинается!");
-                // Здесь будет логика перехода на игровой экран
+                showScreen(allPanels.game);
+                document.getElementById('game-info').textContent = `Игра в лобби ${data.lobby_owner_id} началась!`;
             }
         };
         ws.onclose = () => setTimeout(connect, 3000);
@@ -68,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         lobbies.forEach(lobby => {
-            if (lobby.owner_id === userTelegramId) return; // Не показываем свои же лобби
+            if (lobby.owner_id === userTelegramId) return;
 
             const lobbyElement = document.createElement('div');
             lobbyElement.className = 'lobby-item';
@@ -86,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
-    // --- Обработчик для кнопок "Войти" ---
+    // --- Обработчик для кнопок "Войти" (с делегированием) ---
     if(lobbiesContainer){
         lobbiesContainer.addEventListener('click', function(event) {
             if (event.target.classList.contains('join-button') && !event.target.disabled) {
@@ -96,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         action: 'join_lobby',
                         lobby_owner_id: parseInt(lobbyOwnerId)
                     }));
-                    showScreen(waitingPanel);
+                    showScreen(allPanels.waiting);
                 }
             }
         });
@@ -104,26 +112,26 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // --- Логика переключения экранов ---
     function showScreen(panelToShow) {
-        [mainMenuPanel, lobbyListPanel, lobbyCreationPanel, paymentPanel, waitingPanel].forEach(p => {
+        Object.values(allPanels).forEach(p => {
             if (p) p.style.display = "none";
         });
         if (panelToShow) panelToShow.style.display = "block";
     }
     
-    if (playButton) playButton.addEventListener("click", () => {
-        showScreen(lobbyListPanel);
+    buttons.play?.addEventListener("click", () => {
+        showScreen(allPanels.list);
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify({ action: 'request_lobbies' }));
         }
     });
-    if (lobbyButton) lobbyButton.addEventListener("click", () => showScreen(lobbyCreationPanel));
-    if (balanceButton) balanceButton.addEventListener("click", () => showScreen(paymentPanel));
-    if (backToMenuFromLobbyBtn) backToMenuFromLobbyBtn.addEventListener("click", () => showScreen(mainMenuPanel));
-    if (backToMenuFromListBtn) backToMenuFromListBtn.addEventListener("click", () => showScreen(mainMenuPanel));
-    if (backToMenuFromPaymentBtn) backToMenuFromPaymentBtn.addEventListener("click", () => showScreen(mainMenuPanel));
-    if (cancelLobbyButton) cancelLobbyButton.addEventListener("click", () => {
+    buttons.lobby?.addEventListener("click", () => showScreen(allPanels.create));
+    buttons.balance?.addEventListener("click", () => showScreen(allPanels.payment));
+    buttons.backFromLobby?.addEventListener("click", () => showScreen(allPanels.main));
+    buttons.backFromList?.addEventListener("click", () => showScreen(allPanels.main));
+    buttons.backFromPayment?.addEventListener("click", () => showScreen(allPanels.main));
+    buttons.cancelLobby?.addEventListener("click", () => {
         // TODO: Отправить на сервер сообщение об отмене лобби
-        showScreen(mainMenuPanel);
+        showScreen(allPanels.main);
     });
     
     // --- Остальная логика ---
@@ -138,28 +146,24 @@ document.addEventListener("DOMContentLoaded", function() {
             return true;
         }
     }
-    if (stakeInput) stakeInput.addEventListener('input', validateStake);
+    stakeInput?.addEventListener('input', validateStake);
 
-    if (playerCountSelector) {
-        playerCountSelector.addEventListener("click", function(event) {
-            if (event.target.classList.contains('player-option')) {
-                playerCountSelector.querySelectorAll('.player-option').forEach(button => button.classList.remove('active'));
-                event.target.classList.add('active');
-            }
-        });
-    }
+    playerCountSelector?.addEventListener("click", function(event) {
+        if (event.target.classList.contains('player-option')) {
+            playerCountSelector.querySelectorAll('.player-option').forEach(button => button.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    });
 
-    if (createLobbyButton) {
-        createLobbyButton.addEventListener("click", function() {
-            if (validateStake()) {
-                const activePlayerOption = document.querySelector(".player-option.active");
-                const playerCount = activePlayerOption ? activePlayerOption.textContent.trim() : '2';
-                const lobbyData = { action: "create_lobby", stake: stakeInput.value, players: playerCount };
-                if (ws && ws.readyState === WebSocket.OPEN) {
-                    ws.send(JSON.stringify(lobbyData));
-                    showScreen(waitingPanel);
-                }
+    buttons.createLobby?.addEventListener("click", function() {
+        if (validateStake()) {
+            const activePlayerOption = playerCountSelector.querySelector(".player-option.active");
+            const playerCount = activePlayerOption ? activePlayerOption.textContent.trim() : '2';
+            const lobbyData = { action: "create_lobby", stake: stakeInput.value, players: playerCount };
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(lobbyData));
+                showScreen(allPanels.waiting);
             }
-        });
-    }
+        }
+    });
 });
