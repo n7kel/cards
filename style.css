@@ -1,42 +1,17 @@
-/* General Body Styles */
 html { line-height: 1.5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
 body {
     margin: 0;
-    background-image: url('background-picture.png'); /* Убедитесь, что этот файл существует! */
+    background-image: url('background-picture.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    /* Добавляем flexbox для центрирования всего содержимого body */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh; /* Минимальная высота на весь экран */
-    overflow: hidden; /* Скрыть прокрутку, если не нужно */
 }
-h1, button, div, span, svg, label, input { margin: 0; padding: 0; box-sizing: border-box; }
+h1, button, div, span, svg, label, input, p { margin: 0; padding: 0; box-sizing: border-box; }
 button { font-family: inherit; font-size: 100%; color: inherit; background: none; border: none; cursor: pointer; }
 input { font-family: inherit; font-size: 100%; }
 
-/* Основной контейнер */
-.game-container { 
-    width: 100%; 
-    max-width: 20rem; /* Узкая панель */
-    height: 100vh; /* Полная высота экрана */
-    max-height: 700px; /* Ограничение высоты на больших экранах */
-    background: linear-gradient(to bottom, #1a1a1a, #0d0d0d); /* Subtle dark gradient */
-    border-radius: 1.5rem;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Центрирует содержимое по вертикали внутри контейнера */
-    align-items: center; /* Центрирует содержимое по горизонтали */
-    position: relative;
-    padding: 1.5rem;
-    box-sizing: border-box;
-    overflow-y: auto; /* Разрешить прокрутку, если контент переполняет */
-}
+.main-container { width: 100%; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
 
-/* Центральная панель */
 .menu-panel {
     background-color: rgba(0, 0, 0, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -44,17 +19,10 @@ input { font-family: inherit; font-size: 100%; }
     -webkit-backdrop-filter: blur(5px);
     border-radius: 1.5rem;
     padding: 1.5rem;
-    width: 100%; /* Панель занимает всю доступную ширину родителя */
+    width: 100%;
+    max-width: 20rem;
     text-align: center;
-    /* Убираем flexbox отсюда, т.к. он уже есть на .game-container */
-    display: flex; /* Осталось для flex-direction: column; */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    color: white; /* Цвет текста для панелей */
 }
-
 .logo {
     color: rgb(214, 202, 202);
     font-size: 2.25rem;
@@ -62,30 +30,15 @@ input { font-family: inherit; font-size: 100%; }
     margin-bottom: 2rem;
     animation: text-glow 3s ease-in-out infinite;
 }
+@keyframes text-glow { 0% { text-shadow: 1px 1px 2px rgba(0,0,0,0.4), 0 0 5px rgba(255,223,186,0.3); } 50% { text-shadow: 1px 1px 2px rgba(0,0,0,0.4), 0 0 20px rgba(255,223,186,0.5); } 100% { text-shadow: 1px 1px 2px rgba(0,0,0,0.4), 0 0 5px rgba(255,223,186,0.3); } }
 
-/* Контейнер для кнопок */
-.buttons-container, .options-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    width: 100%; /* Кнопки занимают всю ширину панели */
-    max-width: 100%; /* Убрал лишнее ограничение */
-    margin-bottom: 1.5rem; /* Уменьшил отступ */
-}
-
-/* Стили для деревянной кнопки */
+.buttons-container, .options-container { display: flex; flex-direction: column; gap: 1.25rem; width: 100%; }
 .wood-button {
-    position: relative;
-    width: 100%;
-    height: 3.5rem;
-    border-radius: 0.75rem;
+    position: relative; width: 100%; height: 3.5rem; border-radius: 0.75rem;
     background: linear-gradient(to bottom, #8A5A44, #6B4226);
-    color: rgb(214, 202, 202);
-    font-weight: 600;
-    font-size: 1.125rem;
+    color: rgb(214, 202, 202); font-weight: 600; font-size: 1.125rem;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    transition: all 0.2s ease;
+    overflow: hidden; transition: all 0.2s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 -3px 5px rgba(0, 0, 0, 0.2), inset 0 3px 5px rgba(255, 255, 255, 0.2);
     border: 1px solid #503928;
 }
@@ -95,73 +48,30 @@ input { font-family: inherit; font-size: 100%; }
 @keyframes grain { 0% { background-position: 0 0; } 100% { background-position: -250% 0; } }
 .button-content { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; height: 100%; }
 
-/* Стили для баланса */
-.balance-indicator { position: absolute; top: 2rem; right: 1.5rem; display: flex; align-items: center; gap: 0.5rem; background-color: rgba(0, 0, 0, 0.8); padding: 0.5rem 1rem; border-radius: 9999px; color: white; font-weight: 600; cursor: pointer; }
+.balance-indicator { position: absolute; top: 1.5rem; right: 1.5rem; display: flex; align-items: center; gap: 0.5rem; background-color: rgba(0, 0, 0, 0.8); padding: 0.5rem 1rem; border-radius: 9999px; color: white; font-weight: 600; cursor: pointer; }
 .balance-indicator svg { color: #facc15; }
 
-/* Анимация свечения для логотипа */
-@keyframes text-glow { 0% { text-shadow: 1px 1px 2px rgba(0,0,0,0.4), 0 0 5px rgba(255,223,186,0.3); } 50% { text-shadow: 1px 1px 2px rgba(0,0,0,0.4), 0 0 20px rgba(255,223,186,0.5); } 100% { text-shadow: 1px 1px 2px rgba(0,0,0,0.4), 0 0 5px rgba(255,223,186,0.3); } }
-
-/* --- НОВЫЕ СТИЛИ ДЛЯ ЭКРАНОВ ЛОББИ И ПОПОЛНЕНИЯ (из вашего style.css) --- */
-/* .options-container - уже определен выше */
-.option-item { display: flex; flex-direction: column; gap: 0.5rem; }
+.option-item { display: flex; flex-direction: column; gap: 0.5rem; text-align: left; color: white; }
 .option-item label { font-weight: 500; font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
 .custom-input { width: 100%; background-color: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.5rem; padding: 0.75rem; color: white; font-size: 1rem; }
 .player-count-selector { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .player-option { flex-grow: 1; padding: 0.5rem; font-size: 0.9rem; border-radius: 0.5rem; background-color: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7); transition: all 0.2s; }
 .player-option.active { background-color: #8b5cf6; color: white; border-color: #a78bfa; }
 .create-button { background: linear-gradient(to bottom, #10b981, #059669); border-color: #047857; }
-.back-button { margin-top: 0.5rem; color: rgba(255, 255, 255, 0.6); text-decoration: underline; background: none; border: none; cursor: pointer; }
+.back-button { margin-top: 0.5rem; color: rgba(255, 255, 255, 0.6); text-decoration: underline; }
 .error-message { color: #ef4444; font-size: 0.8rem; font-weight: 500; min-height: 1rem; display: block; }
 
-/* --- Стили для экрана ожидания --- */
+.lobbies-container { display: flex; flex-direction: column; gap: 0.75rem; max-height: 60vh; overflow-y: auto; padding-right: 5px; }
+.lobbies-container::-webkit-scrollbar { display: none; }
+.no-lobbies-message { color: rgba(255, 255, 255, 0.5); padding: 2rem 0; text-align: center; }
+.lobby-item { display: flex; justify-content: space-between; align-items: center; background-color: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.75rem 1rem; border-radius: 0.75rem; }
+.lobby-details { text-align: left; color: white; }
+.lobby-details .stake { font-weight: 600; }
+.lobby-details .players { font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); }
+.join-button { background-color: #10b981; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.2s; }
+.join-button:hover { background-color: #059669; }
+.join-button:disabled { background-color: #4b5563; cursor: not-allowed; }
+
 .waiting-text { color: rgba(255, 255, 255, 0.8); margin: 1.5rem 0; }
-.invite-link-placeholder { color: rgba(255, 255, 255, 0.5); font-size: 0.9rem; margin-bottom: 1.5rem; }
 .spinner { margin: 2rem auto; border: 4px solid rgba(255, 255, 255, 0.2); border-left-color: #fff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* Lobby Card Styles (for the lobby list) */
-.lobby-card {
-    background: linear-gradient(to bottom, #8A5A44, #6B4226); /* Same as wood-button */
-    border: 1px solid #503928; /* Используем тот же цвет рамки, что и для wood-button */
-    border-radius: 0.75rem; /* Используем тот же радиус, что и для wood-button */
-    color: rgb(214, 202, 202); /* Текст как у wood-button */
-    padding: 1rem; /* Отступы как у wood-button */
-    margin-bottom: 1.25rem; /* Отступ между карточками */
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    position: relative;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 -3px 5px rgba(0, 0, 0, 0.2); /* Тень как у wood-button */
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.lobby-card p {
-    margin: 0.5rem 0; /* Отступы внутри карточки */
-    font-size: 0.95em;
-}
-
-.lobby-card .join-lobby-btn {
-    /* Стили для кнопки "Присоединиться" внутри карточки */
-    align-self: flex-end; /* Выравнивание по правому краю */
-    margin-top: 1rem; /* Отступ сверху */
-    font-size: 0.9em;
-    padding: 0.5rem 1rem;
-    height: auto; /* Позволяет содержимому определять высоту */
-    /* Используем общие стили .wood-button, но переопределяем специфичные для этой кнопки */
-    background: linear-gradient(to bottom, #10b981, #059669); /* Зеленый градиент */
-    border-color: #047857; /* Зеленая рамка */
-}
-
-/* Basic Game Panel Styling */
-#game-panel {
-    padding: 1.5rem;
-    text-align: center;
-    display: flex; /* Снова flex для центрирования содержимого */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
